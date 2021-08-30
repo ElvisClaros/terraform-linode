@@ -28,7 +28,7 @@ resource "linode_domain" "dominio_linode" {
 
 resource "linode_domain_record" "domain_linode_record" {
     domain_id = linode_domain.dominio_linode.id
-    name = "eclaros.xyz"
+    name = "www"
     record_type = "A"
     target = linode_instance.debiL.ip_address
     ttl_sec = 300
@@ -47,28 +47,27 @@ resource "linode_domain_record" "mail" {
 resource "linode_domain_record" "mx" {
   domain_id = linode_domain.dominio_linode.id
   record_type   = "MX"
-  name   = "*.eclaros.xyz"
+  name   = ""
   priority    = "10"
   ttl_sec    = "14400"
-  target = linode_instance.debiL.ip_address
+  target = "mail.eclaros.xyz"
 }
 
 # SPF
 resource "linode_domain_record" "spf" {
   domain_id = linode_domain.dominio_linode.id
   record_type   = "TXT"
-  name   = "*.eclaros.xyz"
+  name        = ""
+  target      = "v=spf1 include:spf.eclaros.xyz -all"
   ttl_sec    = "14400"
-  target = linode_instance.debiL.ip_address
 }
 
 # DMARC
 resource "linode_domain_record" "dmarc" {
   domain_id = linode_domain.dominio_linode.id
   record_type   = "TXT"
-  name   = "_dmarc.eclaros.xyz"
-  ttl_sec    = "14400"
-  target = linode_instance.debiL.ip_address
+   name        = "_dmarc"
+  target      = "v=DMARC1;v=DMARC1; p=none; rua=mailto:dmarc-reports@eclaros.xyz"
 }
 variable "token" {}
 variable "root_pass" {}
